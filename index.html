@@ -145,6 +145,7 @@
         #next>i {
             opacity: 0.9;
             color: rgb(33, 33, 255);
+            transition:linear 0.2s;
         }
 
         #prev>i {
@@ -167,7 +168,7 @@
         }
         #next:hover i{
             position: relative;
-            transform:  scale(1.2);
+            transform:  scale(1.2) rotate(180deg);
             left: 5px;
         }
         #parentDiv{
@@ -191,162 +192,29 @@
             height: 35px;
             margin: 0px 30px;
         }
+
+        #loading {
+      display: block;
+      text-align: center;
+      margin-top: 200px;
+    }
     </style>
 </head>
 
 <body>
     <div id="parentDiv">
     <div id="mainDiv">
-
+        <div id="loading">
+            <!-- Loading indicator (you can replace this with your own loading animation or message) -->
+            Fetching data...
+          </div>
     </div>
     <div>
     <button id="prev" onclick="prev()"><i class="fa-solid fa-right-long fa-rotate-180 fa-lg"></i></button>
-    <button id="next" onclick="next()"><i class="fa-solid fa-right-long fa-lg"></i></button>
+    <button id="next" onclick="next()"><i class="fa-solid fa-left-long fa-rotate-180 fa-lg"></i></button>
     </div>
 </div>
 </body>
-
-<!-- <script>
-    let container = document.getElementById('mainDiv');
-    let currentIndex = 100;
-
-    let request = new XMLHttpRequest();
-    request.open('GET', 'https://restcountries.com/v3.1/all')
-    request.send();
-
-    request.addEventListener('load', function () {
-        console.log(this.responseText);
-        let data1 = JSON.parse(this.responseText)
-
-        let data = data1[currentIndex];
-        let prev = () =>{
-            currentIndex = (currentIndex - 1 + data.length) % data1.length
-            data = data1[currentIndex]
-            console.log(data);
-            updateContext(data);
-        }
-
-        let next = () => {
-            currentIndex = (currentIndex + 1) % data1.length;
-            data = data1[currentIndex];
-            updateContext(data);
-        }
-        // console.log(data[1]);
-        console.log(data.flags.png);
-        // console.log(data1);
-        // console.log(data.languages.ara);
-        console.log(data.languages.hin); //india
-        console.log(data.population);
-        console.log(data.demonyms.eng.f);
-        console.log(data.capital[0]);
-
-
-        let updateContext = (data)=>{
-            container.innerHTML ='';
-
-        let htmlData = `<div id="ImgDiv"><img class ='img' src=${data.flags.png} alt=""></div>
-        <div id="Name">
-            <p>${data.name.common}</p>
-            <p>${data.capital[0]}</p>
-            </div>
-        <div id="Info">
-            <div id="language">
-                <p>${data.languages.hin}</p>
-                <p>language</p>
-            </div>
-            <div id="population">
-                <p>${data.population}</p>
-                <p>population</p>
-            </div>
-            <div id="demonyms">
-                <p>${data.demonyms.eng.f}</p>
-                <p>demonyms</p>
-            </div>
-            
-        </div>`
-        container.insertAdjacentHTML('afterbegin', htmlData)
-        }
-        updateContext(data);
-    })
-
-
-</script> -->
-<!-- <script>
-    let container = document.getElementById('mainDiv');
-    let currentIndex = 0;
-
-    let request = new XMLHttpRequest();
-    request.open('GET', 'https://restcountries.com/v3.1/all')
-    request.send();
-
-    request.addEventListener('load', function () {
-        let data1 = JSON.parse(this.responseText)
-
-        let data = data1[currentIndex];
-
-
-        let prev = () => {
-            // currentIndex = (currentIndex - 1 + data1.length) % data1.length
-            if(currentIndex<=0){
-                currentIndex = data1.length-1;
-            }
-            else{
-                currentIndex = currentIndex-1;
-                console.log(data);
-        console.log(data.languages.eng);
-            }
-            data = data1[currentIndex]
-            updateContext(data);
-        }
-
-        let next = () => {
-            // currentIndex = (currentIndex + 1) % data1.length;
-            if(currentIndex>=data1.length-1){
-                currentIndex=0
-            }
-            else{
-                currentIndex+=1
-            }
-            data = data1[currentIndex];
-            updateContext(data);
-        }
-
-        let updateContext = (data) => {
-            // container.innerHTML = '';
-
-            // let flagSrc = data.flags ? data.flags.png : ''; // Check if flags.png property exists
-
-            let htmlData = data?`<div id="ImgDiv"><img class ='img' src="${data.flags.png }" alt=""></div>
-                            <div id="Name">
-                                <p>${data.name.common}</p>
-                                <p>${data.capital[0]}</p>
-                            </div>
-                            <div id="Info">
-                                <div id="language">
-                                    <p>${data.languages.hin ? data.languages.hin : (data.languages.ara ? data.languages.ara : (data.languages.eng ? data.languages.eng: (data.languages.fra ? data.languages.fra : data.languages.dan) ))}</p>
-                                    <p>language</p>
-                                </div>
-                                <div id="population">
-                                    <p>${data.population}</p>
-                                    <p>population</p>
-                                </div>
-                                <div id="demonyms">
-                                    <p>${data.demonyms ? data.demonyms.eng.f : ''}</p>
-                                    <p>demonyms</p>
-                                </div>
-                            </div>`:'loading';
-
-            container.insertAdjacentHTML('afterbegin', htmlData)
-        }
-
-        updateContext(data);
-
-        // Attach the functions to the global scope
-        window.prev = prev;
-        window.next = next;
-    })
-</script> -->
-
 
 <script>
     let container = document.getElementById('mainDiv');
@@ -359,6 +227,13 @@
 
     request.addEventListener('load', function () {
         let allData = JSON.parse(this.responseText);
+        if(allData){
+            document.getElementById("loading").style.display = "none";
+        }
+        else{
+            document.getElementById("loading").style.display = "block";
+        }
+        
         console.log(allData);
         let data = allData[currentIndex]
         console.log(data);
@@ -387,14 +262,14 @@
 
         function updateContext(data) {
 
-            let htmlData = data ? `<div id="ImgDiv"><img class ='img' src="${data.flags.png}" alt=""></div>
+            let htmlData = allData ? `<div id="ImgDiv"><img class ='img' src="${data.flags.png}" alt=""></div>
                             <div id="Name">
                                 <p>${data.name.common}</p>
                                 <p>${data.capital[0]}</p>
                             </div>
                             <div id="Info">
                                 <div id="language">
-                                    <p>${data.languages.hin ? data.languages.hin : (data.languages.ara ? data.languages.ara : (data.languages.eng ? data.languages.eng : (data.languages.fra ? data.languages.fra : data.languages.dan)))}</p>
+                                    <p>${data.languages.hin ? data.languages.hin : (data.languages.ara ? data.languages.ara : (data.languages.eng ? data.languages.eng : (data.languages.fra ? data.languages.fra : (data.languages.dan? data.languages.dan :'English'))))}</p>
                                     <p>language</p>
                                 </div>
                                 <div id="population">
