@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Api call</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/5f3804d407.js" crossorigin="anonymous"></script>
+
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: sans-serif;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        body {
+            background-color: antiquewhite;
+            background-color: #d7faf8;
+        }
+
+        #mainDiv {
+            /* border: 1px solid red; */
+            width: 280px;
+            height: 400px;
+            margin: auto;
+            border-radius: 40px;
+            /* position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); */
+            display: grid;
+            grid-template-rows: 60% 20% 20%;
+            overflow: hidden;
+            /* background-color: #d7edfa; */
+            background-color: #c4e9ff;
+            background-color: #e1f4ff;
+            box-shadow: 6px 6px 13px rgb(20, 168, 0), -5px -5px 13px rgb(255, 136, 0);
+            /* transform-origin: center center; */
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        #mainDiv:hover {
+            /* transform: rotate(180); */
+            /* transform: scale(1.2); */
+            /* transform: translate(-50%, -50%) scale(1.1) rotate(-3deg); */
+            transform:scale(1.1) rotate(-3deg);
+
+        }
+
+        .img {
+            width: 100%;
+            height: 79%;
+        }
+
+        #ImgDiv {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* border: 1px solid green; */
+        }
+
+        #Name {
+            padding-top: 15px;
+            /* border: 1px solid green; */
+            text-align: center;
+            font-size: 20px;
+        }
+
+        #Name>p {
+            padding-bottom: 5px;
+        }
+
+        #Name>p:nth-child(2) {
+            font-size: 14px;
+            opacity: 0.5;
+            font-weight: bold;
+        }
+
+        #Info {
+            /* border: 1px solid green; */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 0px 10px 4px 10px;
+            align-items: center;
+        }
+
+        #Info>div {
+            overflow: hidden;
+            /* border: 1px solid black; */
+        }
+
+        #Info>div>p {
+            /* border: 1px solid red; */
+            font-size: 12px;
+            text-align: center;
+        }
+
+        #language {
+            width: 100%;
+        }
+
+        #population {
+            width: 100%;
+        }
+
+        #demonyms {
+            width: 100%;
+        }
+
+        #prev {
+            /* position: absolute;
+            top: 77%;
+            left: 44.5%; */
+            padding: 7px 30px;
+            background: none;
+            border-radius: 8px;
+            border: 1px solid rgb(55, 173, 0);
+            background-color: white;
+            transition: transform ease-in-out 0.2s;
+            cursor: pointer;
+        }
+
+        #next {
+            /* position: absolute;
+            top: 77%;
+            left: 51%; */
+            padding: 7px 30px;
+            background: none;
+            border-radius: 8px;
+            border: 1px solid rgb(226, 142, 17);
+            background-color: white;
+            transition: transform ease-in-out 0.2s;
+            cursor:pointer;
+        }
+
+        #next>i {
+            opacity: 0.9;
+            color: rgb(33, 33, 255);
+        }
+
+        #prev>i {
+            opacity: 0.9;
+            color: rgb(33, 33, 255);
+            transition:linear 0.2s;
+        }
+
+        #next:hover {
+            transform: scale(1.05);
+        }
+
+        #prev:hover {
+            transform: scale(1.05);
+        }
+        #prev:hover i{
+            position: relative;
+            transform:  scale(1.2) rotate(180deg);
+            right: 5px;
+        }
+        #next:hover i{
+            position: relative;
+            transform:  scale(1.2);
+            left: 5px;
+        }
+        #parentDiv{
+            width: 300px;
+            height: 550px;
+            /* border: 1px solid red; */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: grid;
+        }
+        #parentDiv>div:nth-child(2){
+            /* border: 1px solid black; */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+        }
+        #parentDiv>div:nth-child(2)>button{
+            height: 35px;
+            margin: 0px 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="parentDiv">
+    <div id="mainDiv">
+
+    </div>
+    <div>
+    <button id="prev" onclick="prev()"><i class="fa-solid fa-right-long fa-rotate-180 fa-lg"></i></button>
+    <button id="next" onclick="next()"><i class="fa-solid fa-right-long fa-lg"></i></button>
+    </div>
+</div>
+</body>
+
+<!-- <script>
+    let container = document.getElementById('mainDiv');
+    let currentIndex = 100;
+
+    let request = new XMLHttpRequest();
+    request.open('GET', 'https://restcountries.com/v3.1/all')
+    request.send();
+
+    request.addEventListener('load', function () {
+        console.log(this.responseText);
+        let data1 = JSON.parse(this.responseText)
+
+        let data = data1[currentIndex];
+        let prev = () =>{
+            currentIndex = (currentIndex - 1 + data.length) % data1.length
+            data = data1[currentIndex]
+            console.log(data);
+            updateContext(data);
+        }
+
+        let next = () => {
+            currentIndex = (currentIndex + 1) % data1.length;
+            data = data1[currentIndex];
+            updateContext(data);
+        }
+        // console.log(data[1]);
+        console.log(data.flags.png);
+        // console.log(data1);
+        // console.log(data.languages.ara);
+        console.log(data.languages.hin); //india
+        console.log(data.population);
+        console.log(data.demonyms.eng.f);
+        console.log(data.capital[0]);
+
+
+        let updateContext = (data)=>{
+            container.innerHTML ='';
+
+        let htmlData = `<div id="ImgDiv"><img class ='img' src=${data.flags.png} alt=""></div>
+        <div id="Name">
+            <p>${data.name.common}</p>
+            <p>${data.capital[0]}</p>
+            </div>
+        <div id="Info">
+            <div id="language">
+                <p>${data.languages.hin}</p>
+                <p>language</p>
+            </div>
+            <div id="population">
+                <p>${data.population}</p>
+                <p>population</p>
+            </div>
+            <div id="demonyms">
+                <p>${data.demonyms.eng.f}</p>
+                <p>demonyms</p>
+            </div>
+            
+        </div>`
+        container.insertAdjacentHTML('afterbegin', htmlData)
+        }
+        updateContext(data);
+    })
+
+
+</script> -->
+<!-- <script>
+    let container = document.getElementById('mainDiv');
+    let currentIndex = 0;
+
+    let request = new XMLHttpRequest();
+    request.open('GET', 'https://restcountries.com/v3.1/all')
+    request.send();
+
+    request.addEventListener('load', function () {
+        let data1 = JSON.parse(this.responseText)
+
+        let data = data1[currentIndex];
+
+
+        let prev = () => {
+            // currentIndex = (currentIndex - 1 + data1.length) % data1.length
+            if(currentIndex<=0){
+                currentIndex = data1.length-1;
+            }
+            else{
+                currentIndex = currentIndex-1;
+                console.log(data);
+        console.log(data.languages.eng);
+            }
+            data = data1[currentIndex]
+            updateContext(data);
+        }
+
+        let next = () => {
+            // currentIndex = (currentIndex + 1) % data1.length;
+            if(currentIndex>=data1.length-1){
+                currentIndex=0
+            }
+            else{
+                currentIndex+=1
+            }
+            data = data1[currentIndex];
+            updateContext(data);
+        }
+
+        let updateContext = (data) => {
+            // container.innerHTML = '';
+
+            // let flagSrc = data.flags ? data.flags.png : ''; // Check if flags.png property exists
+
+            let htmlData = data?`<div id="ImgDiv"><img class ='img' src="${data.flags.png }" alt=""></div>
+                            <div id="Name">
+                                <p>${data.name.common}</p>
+                                <p>${data.capital[0]}</p>
+                            </div>
+                            <div id="Info">
+                                <div id="language">
+                                    <p>${data.languages.hin ? data.languages.hin : (data.languages.ara ? data.languages.ara : (data.languages.eng ? data.languages.eng: (data.languages.fra ? data.languages.fra : data.languages.dan) ))}</p>
+                                    <p>language</p>
+                                </div>
+                                <div id="population">
+                                    <p>${data.population}</p>
+                                    <p>population</p>
+                                </div>
+                                <div id="demonyms">
+                                    <p>${data.demonyms ? data.demonyms.eng.f : ''}</p>
+                                    <p>demonyms</p>
+                                </div>
+                            </div>`:'loading';
+
+            container.insertAdjacentHTML('afterbegin', htmlData)
+        }
+
+        updateContext(data);
+
+        // Attach the functions to the global scope
+        window.prev = prev;
+        window.next = next;
+    })
+</script> -->
+
+
+<script>
+    let container = document.getElementById('mainDiv');
+    console.log(container);
+    let currentIndex = 100;
+
+    let request = new XMLHttpRequest();
+    request.open('GET', 'https://restcountries.com/v3.1/all')
+    request.send();
+
+    request.addEventListener('load', function () {
+        let allData = JSON.parse(this.responseText);
+        console.log(allData);
+        let data = allData[currentIndex]
+        console.log(data);
+
+        let prev = () =>{
+            if(currentIndex<=0){
+                currentIndex = allData.length-1;
+            }
+            else{
+                currentIndex -=1
+            }
+            data = allData[currentIndex]
+            updateContext(data)
+        }
+
+        let next = () =>{
+            if(currentIndex>=allData.length-1){
+                currentIndex = 0;
+            }
+            else{
+                currentIndex+=1;
+            }
+            data = allData[currentIndex]
+            updateContext(data)
+        }
+
+        function updateContext(data) {
+
+            let htmlData = data ? `<div id="ImgDiv"><img class ='img' src="${data.flags.png}" alt=""></div>
+                            <div id="Name">
+                                <p>${data.name.common}</p>
+                                <p>${data.capital[0]}</p>
+                            </div>
+                            <div id="Info">
+                                <div id="language">
+                                    <p>${data.languages.hin ? data.languages.hin : (data.languages.ara ? data.languages.ara : (data.languages.eng ? data.languages.eng : (data.languages.fra ? data.languages.fra : data.languages.dan)))}</p>
+                                    <p>language</p>
+                                </div>
+                                <div id="population">
+                                    <p>${data.population}</p>
+                                    <p>population</p>
+                                </div>
+                                <div id="demonyms">
+                                    <p>${data.demonyms ? data.demonyms.eng.f : ''}</p>
+                                    <p>demonyms</p>
+                                </div>
+                            </div>`: 'loading';
+
+            container.insertAdjacentHTML('afterbegin', htmlData)
+        }
+
+        updateContext(data);
+        window.prev = prev;
+        window.next = next;
+
+    })
+
+
+</script>
+
+</html>
